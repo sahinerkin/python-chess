@@ -1,16 +1,17 @@
 import pygame
-import piece
+from piece import PieceColor, Pawn, Rook, Knight, Bishop, King, Queen
 
 
 class Board:
-    tiles = 8 * [[0] * 8]
+    pieces = []
 
-    def __init__(self, black_tile_color, white_tile_color, tile_size, margin_size, border_size):
+    def __init__(self, black_tile_color, white_tile_color, tile_size, margin_size, border_size, piece_size):
         self.black_tile_color = black_tile_color
         self.white_tile_color = white_tile_color
         self.tile_size = tile_size
         self.margin_size = margin_size
         self.border_size = border_size
+        self.piece_size = piece_size
         self.bordered_margin_size = margin_size + border_size
         self.width = self.height = 8 * tile_size + 2 * self.bordered_margin_size
 
@@ -65,7 +66,59 @@ class Board:
     def draw_pieces(self):
         pieces_surface = pygame.Surface((8*self.tile_size, 8*self.tile_size), pygame.SRCALPHA)
         pieces_surface = pieces_surface.convert_alpha()
+
+        for piece in self.pieces:
+            piece_x, piece_y = piece.position_indexed
+            img_rect = piece.img.get_rect(center=((piece_x+0.5) * self.tile_size,
+                                                  (piece_y+0.5) * self.tile_size))
+            pieces_surface.blit(piece.img, img_rect)
+
         return pieces_surface, self.bordered_margin_size, self.bordered_margin_size
 
-    def print_tiles(self):
-        print(self.tiles)
+    # Place the pieces to their initial positions (as done in the beginning of a usual chess game)
+    def reset_pieces(self):
+        self.pieces = []
+
+        # White pawns
+        self.pieces += [Pawn(PieceColor.White, self.piece_size, coord_alphanum="a2"),
+                        Pawn(PieceColor.White, self.piece_size, coord_alphanum="b2"),
+                        Pawn(PieceColor.White, self.piece_size, coord_alphanum="c2"),
+                        Pawn(PieceColor.White, self.piece_size, coord_alphanum="d2"),
+                        Pawn(PieceColor.White, self.piece_size, coord_alphanum="e2"),
+                        Pawn(PieceColor.White, self.piece_size, coord_alphanum="f2"),
+                        Pawn(PieceColor.White, self.piece_size, coord_alphanum="g2"),
+                        Pawn(PieceColor.White, self.piece_size, coord_alphanum="h2")]
+
+        # Black pawns
+        self.pieces += [Pawn(PieceColor.Black, self.piece_size, coord_alphanum="a7"),
+                        Pawn(PieceColor.Black, self.piece_size, coord_alphanum="b7"),
+                        Pawn(PieceColor.Black, self.piece_size, coord_alphanum="c7"),
+                        Pawn(PieceColor.Black, self.piece_size, coord_alphanum="d7"),
+                        Pawn(PieceColor.Black, self.piece_size, coord_alphanum="e7"),
+                        Pawn(PieceColor.Black, self.piece_size, coord_alphanum="f7"),
+                        Pawn(PieceColor.Black, self.piece_size, coord_alphanum="g7"),
+                        Pawn(PieceColor.Black, self.piece_size, coord_alphanum="h7")]
+
+        # Rooks
+        self.pieces += [Rook(PieceColor.White, self.piece_size, coord_alphanum="a1"),
+                        Rook(PieceColor.White, self.piece_size, coord_alphanum="h1"),
+                        Rook(PieceColor.Black, self.piece_size, coord_alphanum="a8"),
+                        Rook(PieceColor.Black, self.piece_size, coord_alphanum="h8")]
+
+        # Knights
+        self.pieces += [Knight(PieceColor.White, self.piece_size, coord_alphanum="b1"),
+                        Knight(PieceColor.White, self.piece_size, coord_alphanum="g1"),
+                        Knight(PieceColor.Black, self.piece_size, coord_alphanum="b8"),
+                        Knight(PieceColor.Black, self.piece_size, coord_alphanum="g8")]
+
+        # Bishops
+        self.pieces += [Bishop(PieceColor.White, self.piece_size, coord_alphanum="c1"),
+                        Bishop(PieceColor.White, self.piece_size, coord_alphanum="f1"),
+                        Bishop(PieceColor.Black, self.piece_size, coord_alphanum="c8"),
+                        Bishop(PieceColor.Black, self.piece_size, coord_alphanum="f8")]
+
+        # Kings & Queens
+        self.pieces += [King(PieceColor.White, self.piece_size, coord_alphanum="d1"),
+                        Queen(PieceColor.White, self.piece_size, coord_alphanum="e1"),
+                        King(PieceColor.Black, self.piece_size, coord_alphanum="d8"),
+                        Queen(PieceColor.Black, self.piece_size, coord_alphanum="e8")]
