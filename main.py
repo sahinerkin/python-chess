@@ -1,5 +1,6 @@
 import pygame
 from board import Board
+from piece import PieceColor, Pawn
 
 pygame.init()
 board = Board(black_tile_color=(120, 150, 90),
@@ -21,6 +22,14 @@ def main():
 
     indicator_surface = board.draw_indicators(game_font=game_font)
     win.blit(indicator_surface, (0, 0))
+
+    # mypawn = Pawn(PieceColor.Black, 88)
+    # mypawn.set_position("c7")
+    # print(mypawn.position)
+    # print(mypawn.position_indexed)
+
+    pieces_surface, ps_x, ps_y = board.draw_pieces()
+    win.blit(pieces_surface, (ps_x, ps_y))
     pygame.display.update()
 
     run = True
