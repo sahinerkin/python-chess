@@ -13,14 +13,15 @@ class Board:
         self.border_size = border_size
         self.piece_size = piece_size
         self.bordered_margin_size = margin_size + border_size
-        self.width = self.height = 8 * tile_size + 2 * self.bordered_margin_size
+        self.window_width = self.window_height = 8 * tile_size + 2 * self.bordered_margin_size
 
     # Draw the chess board (return surface to blit on window)
     def draw(self):
-        board_surface = pygame.Surface((self.width, self.height))
+        board_surface = pygame.Surface((2*self.border_size + 8*self.tile_size,
+                                        2*self.border_size + 8*self.tile_size))
         # Fill the surface and draw chess board border
         board_surface.fill(self.white_tile_color)
-        pygame.draw.rect(board_surface, self.black_tile_color, pygame.Rect(self.margin_size, self.margin_size,
+        pygame.draw.rect(board_surface, self.black_tile_color, pygame.Rect(0, 0,
                                                                            8 * self.tile_size + 2 * self.border_size,
                                                                            8 * self.tile_size + 2 * self.border_size))
 
@@ -29,8 +30,8 @@ class Board:
             for j in range(8):
                 tile_color = self.white_tile_color if (i + j) % 2 == 0 else self.black_tile_color
                 pygame.draw.rect(board_surface, tile_color,
-                                 pygame.Rect(self.bordered_margin_size + i * self.tile_size,
-                                             self.bordered_margin_size + j * self.tile_size,
+                                 pygame.Rect(self.border_size + i * self.tile_size,
+                                             self.border_size + j * self.tile_size,
                                              self.tile_size, self.tile_size))
 
         return board_surface
@@ -38,22 +39,22 @@ class Board:
     # Draw the coordinate indicators outside the board (return the surface)
     def draw_indicators(self, game_font):
 
-        indicator_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        indicator_surface = pygame.Surface((self.window_width, self.window_height), pygame.SRCALPHA)
         indicator_surface = indicator_surface.convert_alpha()
 
         for idx in range(8):
             coord_num = game_font.render(str(idx + 1), True, self.black_tile_color)
             coord_l_rect = coord_num.get_rect(
-                center=(self.margin_size / 2, self.height - self.bordered_margin_size - (idx + 0.5) * self.tile_size))
+                center=(self.margin_size / 2, self.window_height - self.bordered_margin_size - (idx + 0.5) * self.tile_size))
             coord_r_rect = coord_num.get_rect(
-                center=(self.width - self.margin_size / 2,
-                        self.height - self.bordered_margin_size - (idx + 0.5) * self.tile_size))
+                center=(self.window_width - self.margin_size / 2,
+                        self.window_height - self.bordered_margin_size - (idx + 0.5) * self.tile_size))
 
             coord_alpha = game_font.render(chr(97 + idx), True, self.black_tile_color)
             coord_t_rect = coord_num.get_rect(
                 center=(self.bordered_margin_size + (idx + 0.5) * self.tile_size, self.margin_size / 2))
             coord_b_rect = coord_num.get_rect(
-                center=(self.bordered_margin_size + (idx + 0.5) * self.tile_size, self.height - self.margin_size / 2))
+                center=(self.bordered_margin_size + (idx + 0.5) * self.tile_size, self.window_height - self.margin_size / 2))
 
             indicator_surface.blit(coord_num, coord_l_rect)
             indicator_surface.blit(coord_num, coord_r_rect)
@@ -64,13 +65,13 @@ class Board:
 
     # Draw the pieces in their respective places (return the surface)
     def draw_pieces(self):
-        pieces_surface = pygame.Surface((8*self.tile_size, 8*self.tile_size), pygame.SRCALPHA)
+        pieces_surface = pygame.Surface((8 * self.tile_size, 8 * self.tile_size), pygame.SRCALPHA)
         pieces_surface = pieces_surface.convert_alpha()
 
         for piece in self.pieces:
             piece_x, piece_y = piece.position_indexed
-            img_rect = piece.img.get_rect(center=((piece_x+0.5) * self.tile_size,
-                                                  (piece_y+0.5) * self.tile_size))
+            img_rect = piece.img.get_rect(center=((piece_x + 0.5) * self.tile_size,
+                                                  (piece_y + 0.5) * self.tile_size))
             pieces_surface.blit(piece.img, img_rect)
 
         return pieces_surface, self.bordered_margin_size, self.bordered_margin_size
@@ -126,7 +127,7 @@ class Board:
         self.pieces += [Queen(PieceColor.White, self.piece_size, coord_alphanum="d5")]
 
     def get_clicked_place(self, mouse_pos):
-        pos_x, pos_y = mouse_pos[0]-self.bordered_margin_size, mouse_pos[1]-self.bordered_margin_size
+        pos_x, pos_y = mouse_pos[0] - self.bordered_margin_size, mouse_pos[1] - self.bordered_margin_size
         pos_x, pos_y = pos_x // self.tile_size, pos_y // self.tile_size
 
         if pos_x < 0 or pos_x >= 8 or pos_y < 0 or pos_y >= 8:
@@ -134,3 +135,23 @@ class Board:
 
         else:
             return Piece.index_to_coord_alphanum(pos_x, pos_y)
+
+    def draw_moves(self, moves, captures):
+        move_surface = pygame.Surface((8 * self.tile_size, 8 * self.tile_size), pygame.SRCALPHA)
+        move_surface = move_surface.convert_alpha()
+
+        for move in moves:
+            move_x, move_y = Piece.coord_alphanum_to_index(move)
+            pygame.draw.rect(move_surface, (255, 0, 0, 80), pygame.Rect(move_x * self.tile_size,
+                                                                        move_y * self.tile_size,
+                                                                        self.tile_size,
+                                                                        self.tile_size))
+
+        for cpt in captures:
+            cpt_x, cpt_y = Piece.coord_alphanum_to_index(cpt)
+            pygame.draw.rect(move_surface, (0, 255, 0, 80), pygame.Rect(cpt_x * self.tile_size,
+                                                                        cpt_y * self.tile_size,
+                                                                        self.tile_size,
+                                                                        self.tile_size))
+
+        return move_surface, self.bordered_margin_size, self.bordered_margin_size
