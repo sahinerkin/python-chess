@@ -1,6 +1,6 @@
 import pygame
 from board import Board
-from piece import PieceColor, Piece, Pawn, Rook, Knight, Bishop, King, Queen
+from piece import Piece
 
 pygame.init()
 board = Board(black_tile_color=(120, 150, 90),
@@ -39,10 +39,14 @@ def main():
                 pass
             if event.type == pygame.MOUSEBUTTONDOWN:
                 clicked_place = board.get_clicked_place(pygame.mouse.get_pos())
-                print(clicked_place if clicked_place is not None else "Invalid")
+                print("Piece " + clicked_place if clicked_place is not None else "Piece Invalid")
                 if clicked_place is not None:
                     clicked_piece = Piece.piece_in(board.pieces, clicked_place)
-                    print(clicked_piece.moves_available(board.pieces))
+                    moves, captures = clicked_piece.moves_available(board.pieces)
+                    print("Moves")
+                    print(moves)
+                    print("Captures")
+                    print(captures)
                 pass
 
 
