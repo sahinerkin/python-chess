@@ -123,6 +123,8 @@ class Board:
                         King(PieceColor.Black, self.piece_size, coord_alphanum="d8"),
                         Queen(PieceColor.Black, self.piece_size, coord_alphanum="e8")]
 
+        self.pieces += [Rook(PieceColor.White, self.piece_size, coord_alphanum="d5")]
+
     def get_clicked_place(self, mouse_pos):
         pos_x, pos_y = mouse_pos[0]-self.bordered_margin_size, mouse_pos[1]-self.bordered_margin_size
         pos_x, pos_y = pos_x // self.tile_size, pos_y // self.tile_size
