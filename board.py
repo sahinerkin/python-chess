@@ -1,5 +1,5 @@
 import pygame
-from piece import PieceColor, Pawn, Rook, Knight, Bishop, King, Queen
+from piece import PieceColor, Piece, Pawn, Rook, Knight, Bishop, King, Queen
 
 
 class Board:
@@ -122,3 +122,13 @@ class Board:
                         Queen(PieceColor.White, self.piece_size, coord_alphanum="e1"),
                         King(PieceColor.Black, self.piece_size, coord_alphanum="d8"),
                         Queen(PieceColor.Black, self.piece_size, coord_alphanum="e8")]
+
+    def get_clicked_place(self, mouse_pos):
+        pos_x, pos_y = mouse_pos[0]-self.bordered_margin_size, mouse_pos[1]-self.bordered_margin_size
+        pos_x, pos_y = pos_x // self.tile_size, pos_y // self.tile_size
+
+        if pos_x < 0 or pos_x >= 8 or pos_y < 0 or pos_y >= 8:
+            return None
+
+        else:
+            return Piece.index_to_coord_alphanum(pos_x, pos_y)

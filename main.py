@@ -1,6 +1,6 @@
 import pygame
 from board import Board
-from piece import PieceColor, Pawn, Rook, Knight, Bishop, King, Queen
+from piece import PieceColor, Piece, Pawn, Rook, Knight, Bishop, King, Queen
 
 pygame.init()
 board = Board(black_tile_color=(120, 150, 90),
@@ -14,7 +14,7 @@ win = pygame.display.set_mode((board.width, board.height))
 pygame.display.set_caption("Python Chess")
 
 pygame.font.init()
-game_font = pygame.font.SysFont("Arial", 26)
+game_font = pygame.font.SysFont("Arial", board.margin_size//2)
 
 
 def main():
@@ -38,7 +38,13 @@ def main():
             if event.type == pygame.MOUSEMOTION:
                 pass
             if event.type == pygame.MOUSEBUTTONDOWN:
+                clicked_place = board.get_clicked_place(pygame.mouse.get_pos())
+                print(clicked_place if clicked_place is not None else "Invalid")
+                if clicked_place is not None:
+                    clicked_piece = Piece.piece_in(board.pieces, clicked_place)
+                    print(clicked_piece.moves_available(board.pieces))
                 pass
 
 
-main()
+if __name__ == "__main__":
+    main()
