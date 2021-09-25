@@ -24,6 +24,9 @@ class Piece:
         self.position = coord_alphanum
         self.position_indexed = Pawn.coord_alphanum_to_index(coord_alphanum)
 
+    def move_to(self, coord_alphanum):
+        self.set_position(coord_alphanum)
+
     def draw_to(self, surface, pos_x, pos_y):
         img_rect = self.img.get_rect(center=(pos_x, pos_y))
         surface.blit(self.img, img_rect)
@@ -54,6 +57,10 @@ class Pawn(Piece):
         self.img = pygame.transform.scale(self.img, (size, size)).convert_alpha()
         if coord_alphanum:
             self.set_position(coord_alphanum)
+
+    def move_to(self, coord_alphanum):
+        self.set_position(coord_alphanum)
+        self.first_move = False
 
     def moves_available(self, pieces):
         moves = []
