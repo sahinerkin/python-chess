@@ -108,7 +108,7 @@ class Pawn(Piece):
 
             if tmp_x-1 >= 0 and tmp_y+1 <= 7:
                 cpt = Piece.piece_in(pieces, Piece.index_to_coord_alphanum(tmp_x-1, tmp_y+1))
-                if cpt is not None and cpt.color == PieceColor.Black:
+                if cpt is not None and cpt.color == PieceColor.White:
                     if cpt.capturable:
                         captures.append(Piece.index_to_coord_alphanum(tmp_x-1, tmp_y+1))
                     else:
@@ -116,7 +116,7 @@ class Pawn(Piece):
 
             if tmp_x+1 <= 7 and tmp_y+1 <= 7:
                 cpt = Piece.piece_in(pieces, Piece.index_to_coord_alphanum(tmp_x+1, tmp_y+1))
-                if cpt is not None and cpt.color == PieceColor.Black:
+                if cpt is not None and cpt.color == PieceColor.White:
                     if cpt.capturable:
                         captures.append(Piece.index_to_coord_alphanum(tmp_x+1, tmp_y+1))
                     else:
