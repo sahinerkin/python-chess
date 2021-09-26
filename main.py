@@ -1,6 +1,6 @@
 import pygame
 from board import Board
-from piece import Piece
+from piece import Piece, PieceColor
 
 pygame.init()
 board = Board(black_tile_color=(120, 150, 90),
@@ -42,6 +42,8 @@ def main():
 
     draw_everything(win, board)
 
+    turn = PieceColor.White
+
     drag = False
     dragged_piece = None
     drag_surface = pygame.Surface((board.window_width, board.window_height), pygame.SRCALPHA)
@@ -66,27 +68,30 @@ def main():
                 # print("Place " + clicked_place if clicked_place is not None else "Place Invalid")
                 if clicked_place is not None:
                     clicked_piece = Piece.piece_in(board.pieces, clicked_place)
-                    draw_everything(window=win, chessboard=board, clicked_piece=clicked_piece)
-                    if clicked_piece is not None:
+                    if clicked_piece is not None and turn == clicked_piece.color:
+                        draw_everything(window=win, chessboard=board, clicked_piece=clicked_piece)
                         drag = True
                         dragged_piece = clicked_piece
                         board.remove_piece_at(clicked_piece.position)
                         drag_surface.fill((0, 0, 0, 0))
                         win.blit(drag_surface, (0, 0))
                         pygame.display.update()
+                    else:
+                        draw_everything(window=win, chessboard=board)
 
-            if event.type == pygame.MOUSEBUTTONUP:
+            if event.type == pygame.MOUSEBUTTONUP and drag:
                 drag = False
-                dropped_place = board.get_clicked_place(pygame.mouse.get_pos())
                 if dragged_piece is not None:
                     dropped_place = board.get_clicked_place(pygame.mouse.get_pos())
                     if dropped_place is not None:
                         moves, captures = dragged_piece.moves_available(board.pieces)
                         if dropped_place in moves:
                             dragged_piece.move_to(dropped_place)
+                            turn = PieceColor.Black if turn == PieceColor.White else PieceColor.White
                         elif dropped_place in captures:
                             board.remove_piece_at(dropped_place)
                             dragged_piece.move_to(dropped_place)
+                            turn = PieceColor.Black if turn == PieceColor.White else PieceColor.White
 
                     board.pieces.append(dragged_piece)
 
