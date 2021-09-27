@@ -14,7 +14,7 @@ class Piece:
         self.color = color
         self.position = self.position_indexed = None
         self.img = None
-        self.capturable = True
+        self.isKing = False
         self.in_check_pos = False
 
     def moves_available(self, pieces):
@@ -24,7 +24,7 @@ class Piece:
         self.position = coord_alphanum
         self.position_indexed = Pawn.coord_alphanum_to_index(coord_alphanum)
 
-    def move_to(self, coord_alphanum):
+    def move_to(self, coord_alphanum, temporary=False):
         self.set_position(coord_alphanum)
 
     def draw_to(self, surface, pos_x, pos_y):
@@ -58,9 +58,10 @@ class Pawn(Piece):
         if coord_alphanum:
             self.set_position(coord_alphanum)
 
-    def move_to(self, coord_alphanum):
+    def move_to(self, coord_alphanum, temporary=False):
         self.set_position(coord_alphanum)
-        self.first_move = False
+        if not temporary:
+            self.first_move = False
 
     def moves_available(self, pieces):
         moves = []
@@ -82,7 +83,7 @@ class Pawn(Piece):
             if tmp_x-1 >= 0 and tmp_y-1 >= 0:
                 cpt = Piece.piece_in(pieces, Piece.index_to_coord_alphanum(tmp_x-1, tmp_y-1))
                 if cpt is not None and cpt.color == PieceColor.Black:
-                    if cpt.capturable:
+                    if not cpt.isKing:
                         captures.append(Piece.index_to_coord_alphanum(tmp_x-1, tmp_y-1))
                     else:
                         self.in_check_pos = True
@@ -90,7 +91,7 @@ class Pawn(Piece):
             if tmp_x+1 <= 7 and tmp_y-1 >= 0:
                 cpt = Piece.piece_in(pieces, Piece.index_to_coord_alphanum(tmp_x+1, tmp_y-1))
                 if cpt is not None and cpt.color == PieceColor.Black:
-                    if cpt.capturable:
+                    if not cpt.isKing:
                         captures.append(Piece.index_to_coord_alphanum(tmp_x+1, tmp_y-1))
                     else:
                         self.in_check_pos = True
@@ -109,7 +110,7 @@ class Pawn(Piece):
             if tmp_x-1 >= 0 and tmp_y+1 <= 7:
                 cpt = Piece.piece_in(pieces, Piece.index_to_coord_alphanum(tmp_x-1, tmp_y+1))
                 if cpt is not None and cpt.color == PieceColor.White:
-                    if cpt.capturable:
+                    if not cpt.isKing:
                         captures.append(Piece.index_to_coord_alphanum(tmp_x-1, tmp_y+1))
                     else:
                         self.in_check_pos = True
@@ -117,7 +118,7 @@ class Pawn(Piece):
             if tmp_x+1 <= 7 and tmp_y+1 <= 7:
                 cpt = Piece.piece_in(pieces, Piece.index_to_coord_alphanum(tmp_x+1, tmp_y+1))
                 if cpt is not None and cpt.color == PieceColor.White:
-                    if cpt.capturable:
+                    if not cpt.isKing:
                         captures.append(Piece.index_to_coord_alphanum(tmp_x+1, tmp_y+1))
                     else:
                         self.in_check_pos = True
@@ -144,7 +145,7 @@ class Rook(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -159,7 +160,7 @@ class Rook(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -174,7 +175,7 @@ class Rook(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -189,7 +190,7 @@ class Rook(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -226,7 +227,7 @@ class Knight(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -258,7 +259,7 @@ class Bishop(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -274,7 +275,7 @@ class Bishop(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -290,7 +291,7 @@ class Bishop(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -306,7 +307,7 @@ class Bishop(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -319,7 +320,7 @@ class Bishop(Piece):
 class King(Piece):
     def __init__(self, color, size, coord_alphanum=None):
         super().__init__(color)
-        self.capturable = False
+        self.isKing = True
         self.img = pygame.image.load(pieces_root + self.color.value + "_king.png")
         self.img = pygame.transform.scale(self.img, (size, size)).convert_alpha()
         if coord_alphanum:
@@ -343,7 +344,7 @@ class King(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -375,7 +376,7 @@ class Queen(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -391,7 +392,7 @@ class Queen(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -407,7 +408,7 @@ class Queen(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -423,7 +424,7 @@ class Queen(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -438,7 +439,7 @@ class Queen(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -453,7 +454,7 @@ class Queen(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -468,7 +469,7 @@ class Queen(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True
@@ -483,7 +484,7 @@ class Queen(Piece):
             piece_in_spot = Pawn.piece_in(pieces, tmp_coord_alphanum)
             if piece_in_spot is not None:
                 if piece_in_spot.color != self.color:
-                    if piece_in_spot.capturable:
+                    if not piece_in_spot.isKing:
                         captures.append(tmp_coord_alphanum)
                     else:
                         self.in_check_pos = True

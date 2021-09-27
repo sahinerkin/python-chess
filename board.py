@@ -161,3 +161,31 @@ class Board:
                                                                         self.tile_size))
 
         return move_surface, self.bordered_margin_size, self.bordered_margin_size
+
+    @staticmethod
+    def is_checked(color, pieces):
+        opposite_color = PieceColor.Black if color == PieceColor.White else PieceColor.White
+        for piece in pieces:
+            if piece.color == opposite_color:
+                initial_check_pos = piece.in_check_pos
+                _, _ = piece.moves_available(pieces)
+                if piece.in_check_pos:
+                    piece.in_check_pos = initial_check_pos
+                    return True
+        return False
+
+    def is_checked_after_move(self, piece, move):
+        initial_pos = piece.position
+        new_pieces = self.pieces.copy()
+
+        for p in new_pieces:
+            if p.position == move:
+                new_pieces.remove(p)
+
+        piece.move_to(move, temporary=True)
+        new_pieces.append(piece)
+
+        is_checked_after_move = Board.is_checked(piece.color, new_pieces)
+
+        piece.move_to(initial_pos, temporary=True)
+        return is_checked_after_move

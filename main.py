@@ -2,6 +2,9 @@ import pygame
 from board import Board
 from piece import Piece, PieceColor
 
+# (120, 150, 90)
+# (240, 240, 210)
+
 pygame.init()
 board = Board(black_tile_color=(120, 150, 90),
               white_tile_color=(240, 240, 210),
@@ -65,7 +68,6 @@ def main():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 clicked_place = board.get_clicked_place(pygame.mouse.get_pos())
-                # print("Place " + clicked_place if clicked_place is not None else "Place Invalid")
                 if clicked_place is not None:
                     clicked_piece = Piece.piece_in(board.pieces, clicked_place)
                     if clicked_piece is not None and turn == clicked_piece.color:
@@ -85,10 +87,10 @@ def main():
                     dropped_place = board.get_clicked_place(pygame.mouse.get_pos())
                     if dropped_place is not None:
                         moves, captures = dragged_piece.moves_available(board.pieces)
-                        if dropped_place in moves:
+                        if dropped_place in moves and not board.is_checked_after_move(dragged_piece, dropped_place):
                             dragged_piece.move_to(dropped_place)
                             turn = PieceColor.Black if turn == PieceColor.White else PieceColor.White
-                        elif dropped_place in captures:
+                        elif dropped_place in captures and not board.is_checked_after_move(dragged_piece, dropped_place):
                             board.remove_piece_at(dropped_place)
                             dragged_piece.move_to(dropped_place)
                             turn = PieceColor.Black if turn == PieceColor.White else PieceColor.White
