@@ -119,10 +119,10 @@ class Board:
                         Bishop(PieceColor.Black, self.piece_size, coord_alphanum="f8")]
 
         # Kings & Queens
-        self.pieces += [King(PieceColor.White, self.piece_size, coord_alphanum="d1"),
-                        Queen(PieceColor.White, self.piece_size, coord_alphanum="e1"),
-                        King(PieceColor.Black, self.piece_size, coord_alphanum="d8"),
-                        Queen(PieceColor.Black, self.piece_size, coord_alphanum="e8")]
+        self.pieces += [Queen(PieceColor.White, self.piece_size, coord_alphanum="d1"),
+                        King(PieceColor.White, self.piece_size, coord_alphanum="e1"),
+                        Queen(PieceColor.Black, self.piece_size, coord_alphanum="d8"),
+                        King(PieceColor.Black, self.piece_size, coord_alphanum="e8")]
 
     def remove_piece_at(self, coord_alphanum):
         for piece in self.pieces:
