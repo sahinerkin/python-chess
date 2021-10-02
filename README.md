@@ -11,23 +11,23 @@ To do:
 
 # Demonstration
 <table>
-<tbody style="border: none">
+<tbody>
   <tr>
     <td>
       <div>
-        <img alt= "Pawn Movement" src="/gifs/pawn_movement.gif"/>
+        <img alt="Pawn Movement" src="/gifs/pawn_movement.gif"/>
         <p align="center">Pawn movement (and non-valid moves)</p>
       </div>
     </td>
     <td>
       <div>
-        <img alt= "Rook Movement" src="/gifs/rook_movement.gif"/>
+        <img alt="Rook Movement" src="/gifs/rook_movement.gif"/>
         <p align="center">Rook movement</p>
       </div>
     </td>
     <td>
       <div>
-        <img alt= "Bishop Movement" src="/gifs/bishop_movement.gif"/>
+        <img alt="Bishop Movement" src="/gifs/bishop_movement.gif"/>
         <p align="center">Bishop movement</p>
       </div>
     </td>
@@ -35,20 +35,20 @@ To do:
   <tr>
     <td>
       <div>
-        <img alt= "Knight Movement" src="/gifs/knight_movement.gif"/>
+        <img alt="Knight Movement" src="/gifs/knight_movement.gif"/>
         <p align="center">Knight movement</p>
       </div>
     </td>
     <td>
       <div>
-        <img alt= "Queen Movement" src="/gifs/queen_movement.gif"/>
+        <img alt="Queen Movement" src="/gifs/queen_movement.gif"/>
         <p align="center">Queen movement</p>
       </div>
     </td>
     <td>
       <div>
-        <img alt= "King Movement" src="/gifs/king_movement.gif"/>
-        <p align="center">King movement (and non-valid moves in check)</p>
+        <img alt="King Movement" src="/gifs/king_movement.gif"/>
+        <p align="center">King movement (and non-valid moves)</p>
       </div>
     </td>
   </tr>
